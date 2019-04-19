@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script type="application/javascript" src="media/js/vue.min.js"></script>
+  <script src="media/plugins/jquery/jquery.min.js"></script>
+  <title></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper" id="data">
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">用户新增</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" action="" onsubmit="return false">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">用户名：</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">密码：</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+                  </div>
+                  <div class="form-group">
+                    <label for="role">角色：</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <select class="form-control" id="role" name="rid">
+                          <option>请选择角色</option>
+                          <option v-for="r in obj.info" :value="r.id">{{r.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer" style="text-align: center">
+                  <button type="submit" class="btn btn-primary" onclick="signUp()">新增用户</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+</div>
+        </div>
+        </div>
+    </section>
+</div>
+
+<script>
+  var appdata = new Vue({
+    el:"#data",
+    data:{
+      obj:{
+        info:[]
+      }
+    }
+  })
+
+  $(function() {
+    $.ajax({
+      url:"role/roleAll.do",
+      method:"get",
+      success:function (data) {
+        if (data.code == 1){
+          appdata.obj.info = data.data;
+        }
+      }
+    })
+  })
+
+  function signUp() {
+    $.ajax({
+      url:"user/signUp.do",
+      method:"post",
+      data:$("form").serialize(),
+      success:function (obj) {
+        if (obj.code == 1){
+          alert("添加成功")
+        } else {
+          alert("添加失败")
+        }
+      }
+    })
+  }
+
+
+</script>
+</body>
+</html>

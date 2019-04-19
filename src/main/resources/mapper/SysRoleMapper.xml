@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.shiroadmin.dao.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.shiroadmin.entity.SysRole">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="info" jdbcType="VARCHAR" property="info" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, info
+  </sql>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.shiroadmin.entity.SysRole">
+    insert into sys_role (name, info
+      )
+    values (#{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="com.qfedu.shiroadmin.entity.SysRole">
+    update sys_role
+    set name = #{name,jdbcType=VARCHAR},
+      info = #{info,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) sys_role
+  </select>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select * from sys_role order by id limit #{index},#{limit}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from sys_role order by id
+  </select>
+
+  <select id="selectByName" resultMap="BaseResultMap">
+    select * from sys_role where name = #{name}
+  </select>
+</mapper>

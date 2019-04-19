@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script type="application/javascript" src="media/js/vue.min.js"></script>
+  <title></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">角色新增</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" action="" onsubmit="return false">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">角色名：</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">描述</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" name="info">
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer" style="text-align: center">
+                  <button type="submit" class="btn btn-primary" onclick="add()">新增角色</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+</div>
+        </div>
+        </div>
+    </section>
+</div>
+
+<script>
+  function add() {
+    $.ajax({
+      url:"role/add.do",
+      method:"get",
+      data:$("form").serialize(),
+      success:function (data) {
+        if (data.code == 1){
+          alert("添加成功")
+        } else {
+          alert(data.data);
+        }
+      }
+    })
+  }
+</script>
+</body>
+</html>

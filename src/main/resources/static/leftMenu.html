@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>树型菜单</title>
+	<link rel="stylesheet" href="media/css/menu.css">
+</head>
+<body>
+	<div class="treebox">
+		<ul class="menu">
+			<li class="level1">
+				<a href="#none"><em class="ico ico1"></em>导航一<i class="down"></i></a>
+				<ul class="level2">
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+				</ul>
+			</li>
+			<li class="level1">
+				<a href="#none"><em class="ico ico2"></em>导航一<i></i></a>
+				<ul class="level2">
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+				</ul>
+			</li>
+			<li class="level1">
+				<a href="#none"><em class="ico ico3"></em>导航一<i></i></a>
+				<ul class="level2">
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+				</ul>
+			</li>
+			<li class="level1">
+				<a href="#none"><em class="ico ico4"></em>导航一<i></i></a>
+				<ul class="level2">
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+				</ul>
+			</li>
+                        <li class="level1">
+				<a href="#none"><em class="ico ico5"></em>导航一<i></i></a>
+				<ul class="level2">
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+					<li><a href="javascript:;">导航选项</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<!-- 引入 jQuery -->
+<script src="media/js/jquery-3.3.1.js"></script>
+<script src="media/js/easing.js"></script>
+<script>
+//等待dom元素加载完毕.
+	$(function(){
+		$(".treebox .level1>a").click(function(){
+			$(this).addClass('current')   //给当前元素添加"current"样式
+			.find('i').addClass('down')   //小箭头向下样式
+			.parent().next().slideDown('slow','easeOutQuad')  //下一个元素显示
+			.parent().siblings().children('a').removeClass('current')//父元素的兄弟元素的子元素去除"current"样式
+			.find('i').removeClass('down').parent().next().slideUp('slow','easeOutQuad');//隐藏
+			 return false; //阻止默认时间
+		});
+	})
+</script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.shiroadmin.dao.SysPermissionMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.shiroadmin.entity.SysPermission">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="SMALLINT" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+    <result column="level" jdbcType="SMALLINT" property="level" />
+    <result column="perms" jdbcType="VARCHAR" property="perms" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, name, icon, parentid, level, perms
+  </sql>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from sys_permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qfedu.shiroadmin.entity.SysPermission">
+    insert into sys_permission (id, type, name, 
+      icon, parentid, level, 
+      perms)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=SMALLINT}, #{name,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, #{level,jdbcType=SMALLINT}, 
+      #{perms,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByIdKeySelective" parameterType="com.qfedu.shiroadmin.entity.SysPermission">
+    update sys_permission
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null">
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=SMALLINT},
+      </if>
+      <if test="perms != null">
+        perms = #{perms,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByLevel" resultMap="BaseResultMap">
+    select * from sys_permission where level = #{level}
+  </select>
+  
+  <select id="selectPage" resultMap="BaseResultMap">
+    select * from sys_permission order by id limit #{index},#{count}
+  </select>
+
+</mapper>

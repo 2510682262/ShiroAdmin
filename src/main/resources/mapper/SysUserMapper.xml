@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.shiroadmin.dao.SysUserMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.shiroadmin.entity.SysUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="flag" jdbcType="SMALLINT" property="flag" />
+    <result column="createtime" jdbcType="DATE" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, password, flag, createtime
+  </sql>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.qfedu.shiroadmin.entity.SysUser" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_user (id, name, password, 
+      flag, createtime)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      1, now())
+  </insert>
+
+  <update id="updateByIdSelective" parameterType="com.qfedu.shiroadmin.entity.SysUser">
+    update sys_user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=SMALLINT},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByIdFlag" parameterType="com.qfedu.shiroadmin.entity.SysUser">
+    update sys_user
+    set flag = #{flag,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByIdPassword" parameterType="com.qfedu.shiroadmin.entity.SysUser">
+    update sys_user
+    set password = #{passwrod}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByName" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from sys_user where name = #{name} and flag = 1
+  </select>
+
+  <select id="selectByUidMenu" resultType="com.qfedu.shiroadmin.entity.SysPermission">
+    select p.* from sys_user_role ur
+    inner join sys_role_permission rp on ur.rid=rp.rid
+    inner join sys_permission p on rp.pid=p.id
+    where p.type=1 and ur.uid=#{uid} order by p.level
+  </select>
+
+  <select id="selectByUidPerms" resultType="java.lang.String">
+    select p.perms from sys_user_role ur
+    inner join sys_role_permission rp on ur.rid=rp.rid
+    inner join sys_permission p on rp.pid=p.id
+    where ur.uid=#{uid}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from sys_user order by id limit #{page},#{limit}
+  </select>
+
+  <select id="selectByUidRole" resultType="com.qfedu.shiroadmin.common.vo.UserRoleVo">
+    select ur.uid,r.name from sys_user_role ur inner join sys_role r on ur.rid=r.id order by ur.uid
+  </select>
+
+  <select id="selectAllCount" resultType="java.lang.Integer">
+    select count(*) from sys_user order by id
+  </select>
+
+  <select id="selectPage" resultMap="BaseResultMap">
+    select * from sys_user order by id limit #{index},#{count}
+  </select>
+
+  <select id="selectByUr" resultType="java.lang.Integer">
+    select r.id from sys_user_role ur inner join sys_role r on ur.rid = r.id where ur.uid = #{id} order by ur.uid
+  </select>
+
+
+</mapper>

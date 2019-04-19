@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    .layui-laypage{
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="container-fluid">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">用户列表</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" id="dvdata">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>姓名</th>
+                  <th>角色</th>
+                  <th>标记</th>
+                  <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody >
+                <tr v-for="u in obj.data">
+                  <td>{{u.id}}</td>
+                  <td>{{u.name}}</td>
+                  <td>{{u.roles}}</td>
+                  <td>{{u.flagmsg}}</td>
+                  <td>{{u.createTime}}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="5" align="right">
+                      <div id="dvpage"></div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+
+
+</div>
+<!-- ./wrapper -->
+<script type="application/javascript">
+
+  $(function () {
+    $.ajax({
+      url:"user/userAllCount.do",
+      method:"get",
+      success:function (obj) {
+        var count = obj.data;
+        layui.use('laypage', function() {
+          var laypage = layui.laypage;
+
+          //执行一个laypage实例
+          laypage.render({
+            elem: 'dvpage' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: count //数据总数，从服务端得到
+            ,jump: function (obj, first) {
+              //obj包含了当前分页的所有参数，比如：
+              console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+              console.log(obj.limit); //得到每页显示的条数
+              loadData(obj.curr - 1, obj.limit);
+            }
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+            ,limits:[10, 20, 50, 100]
+          });
+        });
+
+      }
+    })
+  });
+
+  var appdata=new Vue({
+      el:"#dvdata",
+      data:{
+          obj:{}
+      }
+  });
+
+
+  function loadData(page,limit) {
+      $.ajax({
+        url:"user/userAll.do?page=" + page + "&limit=" + limit,
+        method:"get",
+        success:function (obj) {
+          appdata.obj=obj;
+        }
+      })
+  }
+</script>
+</body>
+</html>

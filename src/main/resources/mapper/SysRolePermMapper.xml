@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.shiroadmin.dao.SysRolePermMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.shiroadmin.entity.SysRolePerm">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="rid" jdbcType="INTEGER" property="rid" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, rid, pid
+  </sql>
+  <select id="selectByRid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role_permission
+    where rid = #{rid}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from sys_role_permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByRid" parameterType="java.lang.Integer">
+    delete from sys_role_permission
+    where rid = #{rid}
+  </delete>
+
+  <insert id="insert" parameterType="com.qfedu.shiroadmin.entity.SysRolePerm">
+    insert into sys_role_permission ( rid, pid)
+    values (#{rid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER})
+  </insert>
+
+
+</mapper>

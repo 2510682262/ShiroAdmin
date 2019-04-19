@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    .layui-laypage{
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="container-fluid">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">用户列表</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" id="dvdata">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>姓名</th>
+                  <th>角色</th>
+                  <th>标记</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody >
+                <tr v-for="u in obj.data">
+                  <td>{{u.id}}</td>
+                  <td>{{u.name}}</td>
+                  <td>{{u.roles}}</td>
+                  <td>{{u.flag}}</td>
+                  <td>{{u.createtime}}</td>
+                  <td>
+                    <button class="btn btn-info" v-if="obj.edit"  @click="edit(u)">编辑</button>
+                    <button class="btn btn-info" v-if="obj.del" @click="delete(u.id,u.name)">删除</button>
+                  </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="6" align="right">
+                      <div id="dvpage"></div>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+
+
+</div>
+<!-- ./wrapper -->
+<script type="application/javascript">
+
+    //layui的分页插件和弹出窗
+    var layer,laypage;
+    layui.use(['laypage','layer'], function() {
+        laypage = layui.laypage;
+        layer = layui.layer;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'dvpage' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: 50 //数据总数，从服务端得到
+            ,jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                loadData(obj.curr, obj.limit);
+            }
+            ,layout:['limit','prev', 'page','skip', 'next']
+            ,limits:[20, 50, 100]
+        });
+    });
+  //分页列表数据
+  var appdata=new Vue({
+      el:"#dvdata",
+      data:{
+          obj:{
+              code:0,
+              edit:true,
+              del:true,
+              data:[]
+          }
+      },
+      methods:{
+          delete:function (id,name) {
+              console.log(id+"---->"+name);
+              layer.confirm('确认要重启吗？', {
+                  btn : [ '确定', '取消' ]//按钮
+              }, function(index) {
+                  console.log("确认关闭");
+                  layer.close(index);
+              });
+              // layer.confirm('确认要重启吗？', {
+              //     btn : [ '确定', '取消' ]//按钮
+              // }, function(index) {
+              //     //发起删除请求
+              //     $.post("userdel.do","id="+id,function (obj) {
+              //         if(obj.code==1){
+              //             loadData(1,20);
+              //             layer.close(index);
+              //         }
+              //     })
+              // })
+          },
+          edit:function (obj) {
+            userdata.user=obj;
+            //查询当前用户的所有角色id
+            $.get("user/userrole.do","id="+obj.id,function (data) {
+                userdata.rids=data.data;
+                //遍历复选框 拥有就选中
+                $("#dvroles input[name=rid]").each(function () {
+                    var v1=this.value;
+                    console.log(v1);
+                    if(searchArray(v1,userdata.rids)){
+                        //拥有权限  选中
+                        $(this).attr("checked",true);
+                    }
+                });
+                layer.open(
+                    {
+                        type:1,
+                        title:"编辑用户信息",
+                        content:$("#dvuserdata")
+                    }
+                );
+            })
+          }
+      }
+  });
+
+//分页加载数据
+  function loadData(page,limit) {
+          $.get("user/userAll.do","page="+page+"&limit="+limit,
+              function (obj) {
+              appdata.obj=obj;
+              if(obj.edit){
+                  //发起请求，获取所有的角色
+                  $.get("role/roleAll.do",null,function (obj) {
+                      userdata.roles=obj.data;
+                  })
+              }
+          });
+  }
+  //编辑框的信息数据
+  var userdata=new Vue({
+      el:"#dvuserdata",
+      data:{
+          user:{},//当前编辑的用户
+          roles:[],//所有的角色
+          rids:[]//当前用户的所有角色id
+      }
+  });
+  function updaterole() {
+      $.ajax(
+          {
+              url:"updaterole.do",
+              method:"post",
+              data:$("#fm2").serialize(),
+              success:function (obj) {
+                  if(obj.code==1){
+                      //刷新本页数据
+                  }else{
+                      layer.msg("服务器繁忙，稍后再试");
+                  }
+              }
+          })
+  }
+</script>
+</body>
+</html>
+<!--编辑用户-->
+<div class="container" style="display: none" id="dvuserdata">
+  <form id="fm2" class="form">
+    <div class="card-body">
+      <div class="form-group">
+        <label for="username">用户名：</label>
+        <input type="text" readonly class="form-control" id="username" :value="user.name">
+      </div>
+
+      <div class="form-group">
+        <label >角色：</label>
+        <div class="input-group" id="dvroles">
+          <span v-for="role in roles">
+            <input type="checkbox" class="roles"  name="rid"  :value="role.id">{{role.name}}
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer" style="text-align: center">
+      <button type="button" onclick="updaterole()" class="btn btn-primary">修改用户</button>
+    </div>
+  </form>
+</div>

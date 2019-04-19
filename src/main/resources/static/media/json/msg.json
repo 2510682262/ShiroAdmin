@@ -1,0 +1,24 @@
+{
+  "code":1,
+  "msg":"OK",
+  "data":[
+    {
+      "id":1,
+      "name":"老邢",
+      "headImg":"media/images/user1-128x128.jpg",
+      "sign":"如需帮助请@……"
+    },
+    {
+      "id":2,
+      "name":"晓磊",
+      "headImg":"media/images/user1-128x128.jpg",
+      "sign":"如需帮助请@……"
+    },
+    {
+      "id":3,
+      "name":"瑞哥",
+      "headImg":"media/images/user1-128x128.jpg",
+      "sign":"如需帮助请@……"
+    }
+  ]
+}
